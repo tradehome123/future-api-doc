@@ -29,7 +29,7 @@
     * [4\.13 通过userid，currencyName 查询资金](#4-13-通过useridcurrencyname-查询资金)
     * [4\.14 设置自动追加保证金](#4-14-设置自动追加保证金)
     * [4\.15 设置保证金使用顺序](#4-15-设置保证金使用顺序)
-    * [4\.16 和zb之间资金划转](#4-16-和zb之间资金划转)
+    * [4\.16 和现货之间资金划转](#4-16-和现货之间资金划转)
     * [4\.17 查询冻结类型信息list](#4-17-查询冻结类型信息list)
     * [4\.18 查询冻结list](#4-18-查询冻结list)
 * [5\. 合约交易](#5-合约交易)
@@ -147,9 +147,9 @@ ZB-LAN: cn
 
 ### 1.3. 签名规则
 **本平台提供了python，java，go版本的api签名请求demo，见：**<br>
-python版本:  https://github.com/ZBFuture/zb_sdk_python <br>
-java版本：https://github.com/ZBFuture/zb_sdk_java <br>
-go版本：https://github.com/ZBFuture/zb_sdk_Go <br>
+python版本:  https://github.com/tradehome123/zb_sdk_python <br>
+java版本：https://github.com/tradehome123/zb_sdk_java <br>
+go版本：https://github.com/tradehome123/zb_sdk_Go <br>
 
 **另外1.3.6和1.3.7章节有签名部分的代码示例可以参考**
 
