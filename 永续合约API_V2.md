@@ -147,9 +147,9 @@ ZB-LAN: cn
 
 ### 1.3. 签名规则
 **本平台提供了python，java，go版本的api签名请求demo，见：**<br>
-python版本:  https://github.com/tradehome123/zb_sdk_python <br>
-java版本：https://github.com/tradehome123/zb_sdk_java <br>
-go版本：https://github.com/tradehome123/zb_sdk_Go <br>
+python版本:  https://github.com/tradehome123/future_api_python <br>
+java版本：https://github.com/tradehome123/future_api_java <br>
+go版本：https://github.com/tradehome123/future_api_go <br>
 
 **另外1.3.6和1.3.7章节有签名部分的代码示例可以参考**
 
