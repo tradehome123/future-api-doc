@@ -29,7 +29,7 @@
     * [4\.13 Query funds through userid, currencyName](#413-query-funds-through-userid-currencyname)
     * [4\.14 Automatic margin call setting](#414-automatic-margin-call-setting)
     * [4\.15 Margin usage sequence setting](#415-margin-usage-sequence-setting)
-    * [4\.16 Transfer of funds with zb](#416-transfer-of-funds-with-zb)
+    * [4\.16 Transfer of funds with spot](#416-transfer-of-funds-with-spot)
     * [4\.17 Query the freeze type information list](#417-query-the-freeze-type-information-list)
     * [4\.18 Query frozen list](#418-query-frozen-list)
         * [freeze字段说明](#freeze字段说明)
@@ -519,7 +519,7 @@ if __name__ == '__main__':
 
 ## 3. Server address
 
-https://fapi.zb.com
+https://fapi.bw6.com
 
 
 
@@ -1379,7 +1379,7 @@ https://fapi.zb.com
     |modifyTime     |Yes  |Long | Modify rime    |
     |extend     |Yes  |String | Notes    |
 
-### 4.16 Transfer of funds with zb
+### 4.16 Transfer of funds with spot
 
 - URL: /Server/api/v2/Fund/transferFund
   - Interface Type: Http
