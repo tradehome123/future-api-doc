@@ -29,7 +29,7 @@
     * [4\.13 通过userid，currencyName 查询资金](#4-13-通过useridcurrencyname-查询资金)
     * [4\.14 设置自动追加保证金](#4-14-设置自动追加保证金)
     * [4\.15 设置保证金使用顺序](#4-15-设置保证金使用顺序)
-    * [4\.16 和现货之间资金划转](#4-16-和现货之间资金划转)
+    * [4\.16 和spot现货之间资金划转](#4-16-和spot现货之间资金划转)
     * [4\.17 查询冻结类型信息list](#4-17-查询冻结类型信息list)
     * [4\.18 查询冻结list](#4-18-查询冻结list)
 * [5\. 合约交易](#5-合约交易)
@@ -438,7 +438,7 @@ def myInfo(api_key, secret_key):
     :param secret_key: ZB-secret_key
     :return: 合约账户信息
     '''
-    api_url = 'https://fapi.zb.com'
+    api_url = 'https://fapi.bw6.com'
     params = {'convertUnit': 'usdt',
               'futuresAccountType': '1',
               }
@@ -521,7 +521,7 @@ if __name__ == '__main__':
 
 ## 3.  服务端地址
 
-https://fapi.zb.com
+https://fapi.bw6.com
 
 
 
@@ -1381,7 +1381,7 @@ https://fapi.zb.com
       |modifyTime     |是  |Long | 更新时间    |
       |extend     |是  |String | 备用字段    |
 
-### 4.16 和zb之间资金划转
+### 4.16 和spot现货之间资金划转
 
 - URL: /Server/api/v2/Fund/transferFund
     - 接口类型: Http
@@ -2402,8 +2402,7 @@ subAccount: {periodId: 期id(activityPeriodId)}
 
 ## 7. 公共行情：Http
 
-USDT合约地址：https://fapi.zb.com
-QC合约地址：https://fapi.zb.com/qc
+USDT合约地址：https://fapi.bw6.com
 
 ### 7.1 交易对
 - URL: /Server/api/v2/config/marketList
@@ -3198,8 +3197,7 @@ size最大值为1440，默认值为1
 
 - 接口类型: WebSocket
 
-- USDT合约URL: wss://fapi.zb.com/ws/public/v1
-- QC合约URL: wss://fapi.zb.com/qc/ws/public/v1
+- USDT合约URL: wss://fapi.bw6.com/ws/public/v1
 - 请求参数使用json编码
 
 ### 8.1 订阅
@@ -3669,8 +3667,7 @@ size最大值为100，默认值为1
 
 - 接口类型: WebSocket
 
-- USDT合约URL: wss://fapi.zb.com/ws/private/api/v2
-- QC合约URL: wss://fapi.zb.com/qc/ws/private/api/v2
+- USDT合约URL: wss://fapi.bw6.com/ws/private/api/v2
 
 - **每个请求都必须有的参数：**
 
