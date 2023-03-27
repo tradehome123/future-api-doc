@@ -430,7 +430,7 @@ def myInfo(api_key, secret_key):
     :param secret_key: ZB-secret_key
     :return: 合约账户信息
     '''
-    api_url = 'https://fapi.zb.com'
+    api_url = 'https://fapi.bw6.com'
     params = {'convertUnit': 'usdt',
               'futuresAccountType': '1',
               }
@@ -2485,8 +2485,7 @@ For example：subAccount: "{\"periodId\": 1}"
 
 ## 7. Public market：Http
 
-USDT futures：https://fapi.zb.com
-QC futures：https://fapi.zb.com/qc
+USDT futures：https://fapi.bw6.com
 
 ### 7.1 Trading pair
   - URL: /Server/api/v2/config/marketList
@@ -3282,7 +3281,7 @@ The maximum size is 1440, default value is 1
 
 - Interface type: WebSocket
 
-- URL: wss://fapi.zb.com/ws/public/v1
+- URL: wss://fapi.bw6.com/ws/public/v1
 - Use json encoding for request parameters
 
 ### 8.1 subscribe
@@ -3753,7 +3752,7 @@ The maximum size is 100, default value is 1
 
 - Interface type: WebSocket
 
-- URL: wss://fapi.zb.com/ws/private/api/v2
+- URL: wss://fapi.bw6.com/ws/private/api/v2
 
 - **Parameters required for every request:**
 
