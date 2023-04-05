@@ -10,7 +10,7 @@
         * [1\.3\.6\. 时间同步安全](#1-3-6-时间同步安全)
         * [1\.3\.7\. Java代码示例](#1-3-7-java代码示例)
         * [1\.3\.8\. Python代码示例](#1-3-8-python代码示例)
-  * [1\.4\. 访问限频率规则](#1-4-访问限频率规则)   
+    * [1\.4\. 访问限频率规则](#1-4-访问限频率规则)
 * [2\.响应规则](#2响应规则)
 * [3\.  服务端地址](#3--服务端地址)
 * [4\. 帐户和交易](#4-帐户和交易)
@@ -29,7 +29,7 @@
     * [4\.13 通过userid，currencyName 查询资金](#4-13-通过useridcurrencyname-查询资金)
     * [4\.14 设置自动追加保证金](#4-14-设置自动追加保证金)
     * [4\.15 设置保证金使用顺序](#4-15-设置保证金使用顺序)
-    * [4\.16 和spot现货之间资金划转](#4-16-和spot现货之间资金划转)
+    * [4\.16 和bw之间资金划转](#4-16-和bw之间资金划转)
     * [4\.17 查询冻结类型信息list](#4-17-查询冻结类型信息list)
     * [4\.18 查询冻结list](#4-18-查询冻结list)
 * [5\. 合约交易](#5-合约交易)
@@ -127,36 +127,36 @@
 需要设置如下请求头信息
 
 ```json
-ZB-APIKEY: 72d41c5f-****-****-****-08b18902fab9
+BW-APIKEY: 72d41c5f-****-****-****-08b18902fab9
 
-ZB-TIMESTAMP: 发起请求的时间（UTC），如：2021-01-05T14:05:28.616Z
+BW-TIMESTAMP: 发起请求的时间（UTC），如：2021-01-05T14:05:28.616Z
 
-ZB-SIGN: u4ALcTlk946vNin8pmhQsqt2Ky2DdnXKwrXrZYmnDIQ=
+BW-SIGN: u4ALcTlk946vNin8pmhQsqt2Ky2DdnXKwrXrZYmnDIQ=
 
-ZB-LAN: cn
+BW-LAN: cn
 ```
 
 参数说明：
 
-- ZB-APIKEY: api key
-- ZB-TIMESTAMP: 请求时间，为ISO格式，如`2021-01-05T14:05:28.616Z
-- ZB-SIGN：签名
-- ZB-LAN: 语言，支持cn(中文)、en(英文)和kr(韩文)，默认是cn
+- BW-APIKEY: api key
+- BW-TIMESTAMP: 请求时间，为ISO格式，如`2021-01-05T14:05:28.616Z
+- BW-SIGN：签名
+- BW-LAN: 语言，支持cn(中文)、en(英文)和kr(韩文)，默认是cn
 
 
 
 ### 1.3. 签名规则
 **本平台提供了python，java，go版本的api签名请求demo，见：**<br>
-python版本:  https://github.com/tradehome123/future_api_python <br>
-java版本：https://github.com/tradehome123/future_api_java <br>
-go版本：https://github.com/tradehome123/future_api_go <br>
+python版本:  https://github.com/tradehome123/future-api-python <br>
+java版本：https://github.com/tradehome123/future-api-java <br>
+go版本：https://github.com/tradehome123/future-api-go <br>
 
 **另外1.3.6和1.3.7章节有签名部分的代码示例可以参考**
 
 
 #### 1.3.1. apiKey
 
-由zb平台生成用户的api key
+由bw平台生成用户的api key
 
 
 
@@ -166,11 +166,11 @@ go版本：https://github.com/tradehome123/future_api_go <br>
 
 - 请勿将secretKey在请求或响应中传输；
 
-- ZB-SIGN的请求头是对``timestamp`` + ``method``  + ``requestPath`` + ``request query/request body字符串`` (+表示字符串连接)，以及SecretKey，使用HMAC SHA256方法加密，通过Base64编码输出而得到的；
+- BW-SIGN的请求头是对``timestamp`` + ``method``  + ``requestPath`` + ``request query/request body字符串`` (+表示字符串连接)，以及SecretKey，使用HMAC SHA256方法加密，通过Base64编码输出而得到的；
 
   如：`sign=CryptoJS.enc.Base64.Stringify(CryptoJS.HmacSHA256(timestamp + 'GET' + '/users/self/verify', SecretKey))`
 
-  其中，`timestamp`的值与`ZB-TIMESTAMP`请求头相同，为ISO格式，如`2021-01-05T14:05:28.616Z`。
+  其中，`timestamp`的值与`BW-TIMESTAMP`请求头相同，为ISO格式，如`2021-01-05T14:05:28.616Z`。
 
   method是请求方法，字母全部大写：`GET/POST`。
 
@@ -186,7 +186,7 @@ go版本：https://github.com/tradehome123/future_api_go <br>
 
 #### 1.3.3. requestPath
 
-请求接口路径，USDT合约以/usdt开头，QC合约以/qc开头。如：`/usdt/Server/api/v1/trade/getOrder`
+请求接口路径，USDT合约以/usdt开头，如：`/usdt/Server/api/v1/trade/getOrder`
 
 
 
@@ -216,7 +216,7 @@ orderId=1234567890&symbol=BTC_USDT
 
 #### 1.3.5. 组成最终的要进行签名计算的字符串
 
-例如：请求头ZB-TIMESTAMP: 2021-01-05T14:05:28.616Z，method: GET，请求接口路径：/Server/api/v1/trade/getOrder，那么最终的要进行签名计算的字符串是
+例如：请求头BW-TIMESTAMP: 2021-01-05T14:05:28.616Z，method: GET，请求接口路径：/Server/api/v1/trade/getOrder，那么最终的要进行签名计算的字符串是
 
 ```
 2021-01-05T14:05:28.616ZGET/Server/api/v1/trade/getOrderorderId=1234567890&symbol=BTC_USDT
@@ -263,8 +263,8 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * Description: 采用 Hmac SHA256 + base64 生成签名和验签
  *
- * @author micheal
- * Date 2020/12/3 4:46 下午
+ * @author Jackson
+ * Date 2023/03/3 3:15 下午
  * Version V1.0
  */
 public class HmacSHA256Base64Utils {
@@ -396,10 +396,10 @@ from datetime import datetime
 def headers_private(timestampISO, api_key, sign):
 
     headers = {}
-    headers['ZB-APIKEY'] = api_key
-    headers['ZB-LAN'] = 'cn'
-    headers['ZB-TIMESTAMP'] = timestampISO
-    headers['ZB-SIGN'] = sign
+    headers['BW-APIKEY'] = api_key
+    headers['BW-LAN'] = 'cn'
+    headers['BW-TIMESTAMP'] = timestampISO
+    headers['BW-SIGN'] = sign
 
     """
     headers['Content-Type'] = 'application/json'
@@ -423,7 +423,7 @@ def generate_sign(timestamp, method, urlpath, params, secret_key):
     :param urlpath: requestPath是请求接口路径。如：/Server/api/v1/trade/getOrder
     :param params: 是按照ASCII码顺序进行排序，将各参数使用字符 “&” 连接
     :param secret_key: SecretKey为用户申请APIKey时所生成，需用sha1加密,在线加密工具: http://tool.oschina.net/encrypt?type=2
-    :return: sign(ZB-SIGN加密参数)
+    :return: sign(BW-SIGN加密参数)
     '''
     param_str = __build_sort_param(params)    #排序结果
     content = timestamp + method + urlpath + param_str  #字符串连接用于加密
@@ -434,11 +434,11 @@ def generate_sign(timestamp, method, urlpath, params, secret_key):
 
 def myInfo(api_key, secret_key):
     '''
-    :param api_key: ZB-api_key
-    :param secret_key: ZB-secret_key
+    :param api_key: BW-api_key
+    :param secret_key: BW-secret_key
     :return: 合约账户信息
     '''
-    api_url = 'https://fapi.bw6.com'
+    api_url = 'https://fapi.bw.com'
     params = {'convertUnit': 'usdt',
               'futuresAccountType': '1',
               }
@@ -456,7 +456,7 @@ def myInfo(api_key, secret_key):
 
 if __name__ == '__main__':
     '''
-    在zb.com获取api的api_key、secret_key
+    在bw.com获取api的api_key、secret_key
     '''
     
     api_key = ''
@@ -521,7 +521,7 @@ if __name__ == '__main__':
 
 ## 3.  服务端地址
 
-https://fapi.bw6.com
+https://fapi.bw.com
 
 
 
@@ -536,7 +536,7 @@ https://fapi.bw6.com
 
 | 参数名称 | 类型   | 是否可空 | 描述                                    |
 | -------- | ------ | -------- | --------------------------------------- |
-| futuresAccountType     | Int    | 否       | 合约类型，1:USDT合约  2: QC合约|
+| futuresAccountType     | Int    | 否       | 合约类型，1:USDT合约 |
 |convertUnit |否  |String | 折合单位，页面显示上"≈"号后面的数字单位，可选：cny，usd,usdt,btc,默认cny    |
 
 - 响应结果:
@@ -604,8 +604,8 @@ https://fapi.bw6.com
 |available     |是  |BigDecimal | 可用资产量    |
 |freeze     |是  |BigDecimal | 冻结量    |
 |allUnrealizedPnl     |是  |BigDecimal | 所有对应仓位的累积未实现盈亏    |
-|unit     |是  |String | 固定返回，如果是u本位，返回usdt，如果是币本位返回btc，如果是qc合约返回qc，统计数据的单位    |
-|allMarginConvert |是  |BigDecimal | 所以仓位保证金折合    ||
+|unit     |是  |String | 固定返回，如果是u本位，返回usdt，如果是币本位返回btc，统计数据的单位    |
+|allMarginConvert |是  |BigDecimal | 所以仓位保证金折合    |
 |accountBalanceConvert |是  |BigDecimal |账户余额折合：可用+冻结   |
 |accountNetBalanceConvert     |否  |Long | 账户净资产折合=可用+冻结+账户未实现盈亏    |
 |availableConvert     |是  |BigDecimal | 可用资产量折合    |
@@ -621,7 +621,7 @@ https://fapi.bw6.com
 - 请求参数:
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |marketId |否  |Long | 市场id和市场名称必选其一    |
   |symbol |否  |String | 市场id和市场名称必选其一    |
   |side |否  |Integer | 1 多仓  0 空仓 2 单向持仓 |
@@ -684,7 +684,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |userId |是  |Long |用户id   |
   |marketId |是  |Long | 市场id    |
   |marketName     |是  |String | 市场名称    |
@@ -722,7 +722,7 @@ https://fapi.bw6.com
 - 请求参数:
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |positionsId |是  |Long | 仓位Id    |
   |futuresAccountType |是  |Integer | 1:USDT永续合约    |
 
@@ -740,7 +740,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |maxAdd |是  |BigDecimal |最大可增加保证金   |
   |maxSub |是  |BigDecimal | 最大可减少保证金    |
   |liquidatePrice     |是  |BigDecimal | 预估强平价格    |
@@ -761,7 +761,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |positionsId |是  |Long | 仓位id    |
   |amount |是  |BigDecimal | 变更数量    |
   |type |是  |Integer | 1: 增加  0：减少    |
@@ -817,7 +817,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |marketId |否  |Long | 市场id和市场名称必选其一    |
   |symbol |否  |String | 市场id和市场名称必选其一    |
   |leverage |是  |Integer | 杠杆倍数    |
@@ -836,7 +836,7 @@ https://fapi.bw6.com
                "positionsMode": 2,
                "enableAutoAppend": 1,
                "maxAppendAmount": "11212",
-               "marginCoins": "eth,qc",
+               "marginCoins": "eth",
                "id": 6737268451833817088,
                "createTime": 1606289971312,
                "modifyTime": 0,
@@ -855,7 +855,7 @@ https://fapi.bw6.com
       |id     |否  |Long | 仓位id    |
       |maxAppendAmount |是  |BigDecimal |最多追加保证金，可能被修改，如果为0会关闭自动增加保证金   |
       |enableAutoAppend |是  |Integer | 是否开启自动追加保证金 1:开启  0 ：不开启    |
-      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt,qc    |
+      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt    |
       |createTime     |否  |Long | 创建时间    |
       |modifyTime     |是  |Long | 更新时间    |
       |extend     |是  |String | 备用字段    |
@@ -879,7 +879,7 @@ https://fapi.bw6.com
       |marketId |否  |Long | 市场id和市场名称必选其一    |
       |symbol |否  |String | 市场id和市场名称必选其一    |
       |positionsMode |是  |Integer | 1:单向持仓，2: 双向持仓    |
-      |futuresAccountType |是  |Integer | 1:USDT永续合约  2：QC永续合约, 3 币本位合约    |
+      |futuresAccountType |是  |Integer | 1:USDT永续合约    |
 
     - 响应结果:
       ```json
@@ -894,7 +894,7 @@ https://fapi.bw6.com
                "positionsMode": 2,
                "enableAutoAppend": 1,
                "maxAppendAmount": "11212",
-                "marginCoins": "qc,usdt,eth",
+                "marginCoins": "usdt,eth",
                "id": 6737268451833817088,
                "createTime": 1606289971312,
                "modifyTime": 0,
@@ -913,7 +913,7 @@ https://fapi.bw6.com
       |id     |否  |Long | 仓位id    |
       |maxAppendAmount |是  |BigDecimal |最多追加保证金，可能被修改，如果为0会关闭自动增加保证金   |
       |enableAutoAppend |是  |Integer | 是否开启自动追加保证金 1:开启  0 ：不开启    |
-      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt,qc    |
+      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt    |
       |createTime     |否  |Long | 创建时间    |
       |modifyTime     |是  |Long | 更新时间    |
       |extend     |是  |String | 备用字段    |
@@ -929,7 +929,7 @@ https://fapi.bw6.com
 - 请求参数:
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |marketId |否  |Long | 市场id和市场名称必选其一    |
   |symbol |否  |String | 市场id和市场名称必选其一    |
   |side |否  |Integer | 方向：1：开多   0 开空    |
@@ -949,7 +949,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |marketId |是  |Long | 市场id    |
   |side |是  |Long | 1:多仓 0：空仓    |
   |nominalValue |否  |BigDecimal |用户仓位头寸名义价值 （传side时返回）  |
@@ -966,7 +966,7 @@ https://fapi.bw6.com
 - 请求参数:
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |currencyId |否  |Long | 币种id    |
   |currencyName |否  |String | 币种名字    |
   |type |否  |Integer |账单类型   |
@@ -1037,7 +1037,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |userId |是  |Long |用户id   |
   |freezeId |是  |String | 冻结id    |
   |type     |是  |BigDecimal | 账单类型    |
@@ -1091,7 +1091,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |code |是  |Integer |账单类型   |
   |cnDesc |是  |String | 账单类型中文描述    |
   |enDesc     |是  |String | 账单类型英文描述    |
@@ -1108,7 +1108,7 @@ https://fapi.bw6.com
     ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |symbol |否  |String | 市场,如 ETH_USDT    |
   |startTime |否  |Long | 毫秒时间戳    |
   |endTime |否  |Long | 毫秒时间戳    |
@@ -1194,7 +1194,7 @@ https://fapi.bw6.com
            "positionsMode": 2,
            "enableAutoAppend": 1,
            "maxAppendAmount": "11212",
-            "marginCoins": "eth,qc",
+            "marginCoins": "eth",
            "id": 6737268451833817088,
            "createTime": 1606289971312,
            "modifyTime": 0,
@@ -1213,7 +1213,7 @@ https://fapi.bw6.com
   |id     |否  |Long | 仓位id    |
   |maxAppendAmount |是  |BigDecimal |最多追加保证金，可能被修改，如果为0会关闭自动增加保证金   |
   |enableAutoAppend |是  |Integer | 是否开启自动追加保证金 1:开启  0 ：不开启    |
-  |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt,qc    |
+  |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt    |
   |createTime     |否  |Long | 创建时间    |
   |modifyTime     |是  |Long | 更新时间    |
   |extend     |是  |String | 备用字段    |
@@ -1230,7 +1230,7 @@ https://fapi.bw6.com
 - 请求参数:
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |currencyId |否  |String | 币种id    |
   |currencyName |否  |String | 币种名称    |
   |futuresAccountType |是  |Integer | 1:USDT永续合约    |
@@ -1256,7 +1256,7 @@ https://fapi.bw6.com
           {
               "userId":"6796980210517471232",
               "currencyId":"7",
-              "currencyName":"zb",
+              "currencyName":"bw",
               "amount":"0",
               "allowTransferOutAmount":"873.12"，
               "freezeAmount":"0",
@@ -1272,7 +1272,7 @@ https://fapi.bw6.com
   ```
 
   |参数名|必选|类型|说明|
-  |:----    |:---|:----- |:-----   |
+    |:----    |:---|:----- |:-----   |
   |userId |是  |Long |用户id   |
   |currencyId |是  |Long | 币种id    |
   |currencyName |是  |String | 币种名字    |
@@ -1331,7 +1331,7 @@ https://fapi.bw6.com
     - 请求参数:
         ```
       {
-          "marginCoins":"eth,usdt,qc",
+          "marginCoins":"eth,usdt",
           "symbol":"BTC_USDT",
           "futuresAccountType":1
       }
@@ -1358,7 +1358,7 @@ https://fapi.bw6.com
            "marketId": "101",
            "enableAutoAppend": 1,
            "maxAppendAmount": "11212",
-            "marginCoins": "eth,qc",
+            "marginCoins": "eth",
            "createTime": "1619599539181",
            "modifyTime": "1622112737137"
          },
@@ -1376,12 +1376,12 @@ https://fapi.bw6.com
       |id     |否  |Long | 仓位id    |
       |maxAppendAmount |是  |BigDecimal |最多追加保证金，可能被修改，如果为0会关闭自动增加保证金   |
       |enableAutoAppend |是  |Integer | 是否开启自动追加保证金 1:开启  0 ：不开启    |
-      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt,qc    |
+      |marginCoins |是  |String | 配置的按顺序冻结的保证金，如 eth,usdt    |
       |createTime     |否  |Long | 创建时间    |
       |modifyTime     |是  |Long | 更新时间    |
       |extend     |是  |String | 备用字段    |
 
-### 4.16 和spot现货之间资金划转
+### 4.16 和bw之间资金划转
 
 - URL: /Server/api/v2/Fund/transferFund
     - 接口类型: Http
@@ -1402,7 +1402,7 @@ https://fapi.bw6.com
       |currencyName |是  |String | 币种名称    |
       |amount |是  |BigDecimal | 划转数量,进度参考币种信息    |
       |clientId |是  |String | 唯一id，保持幂等性，不能为空或长度不能超过18    |
-      |side |是  |Integer | 1：充值（zb账户->合约账户），0：提币（合约账户->zb账户）    |
+      |side |是  |Integer | 1：充值（bw账户->合约账户），0：提币（合约账户->bw账户）    |
 
     - 响应结果: 返回仓位对象信息
       ```json
@@ -1473,19 +1473,19 @@ https://fapi.bw6.com
 - 接口类型: Http
 - 请求类型: GET
 - 请求参数:
-- 
-  |参数名|必选|类型|说明|
+-
+|参数名|必选|类型|说明|
   |:----    |:---|:----- |:-----   |
-  |currencyId |否  |Long |币种id   |
-  |currencyName |否  |Long | 币种名称    |
-  |marketId     |否  |Long | 市场id    |
-  |marketName |否  |BigDecimal |市场名称   |
-  |freezeType     |否  |Integer | 冻结类型，具体类型参数getFreezeTypeList接口    |
-  |startCreateTime |否  |Integer |开始时间   |
-  |endCreateTime |否  |Long | 结束时间    |
-  |pageNum     |否  |Long | 第n页    |
-  |pageSize |否  |String |每页记录数   |
-  |isHistory     |否  |Long | 是否历史 1：历史， 默认0：当前最近记录    |
+|currencyId |否  |Long |币种id   |
+|currencyName |否  |Long | 币种名称    |
+|marketId     |否  |Long | 市场id    |
+|marketName |否  |BigDecimal |市场名称   |
+|freezeType     |否  |Integer | 冻结类型，具体类型参数getFreezeTypeList接口    |
+|startCreateTime |否  |Integer |开始时间   |
+|endCreateTime |否  |Long | 结束时间    |
+|pageNum     |否  |Long | 第n页    |
+|pageSize |否  |String |每页记录数   |
+|isHistory     |否  |Long | 是否历史 1：历史， 默认0：当前最近记录    |
 
 
 - 响应结果:
@@ -1648,9 +1648,9 @@ https://fapi.bw6.com
 }
 ```
 
-| 名称       | 类型 | 是否必须 | 描述           |
-| :--------- | :--- | :------- | :------------- |
-| orderDatas | List | 是       | 订单列表，数组 |
+| 名称       | 类型 | 是否必须 | 描述                                                        |
+| :--------- | :--- | :------- | :---------------------------------------------------------- |
+| orderDatas | List | 是       | 订单列表，数组类型，`当为市价委托时最多5笔，其他类最多10笔` |
 
 - 响应结果:
 
@@ -1751,7 +1751,7 @@ orderIds 与 clientOrderIds 选填1个
 
 若取消失败则会列出失败的明细
 
-  ```json
+```json
 {
     "cnDesc": "操作成功",
     "code": 10000,
@@ -1766,7 +1766,7 @@ orderIds 与 clientOrderIds 选填1个
     ],
     "desc": "success"
 }
-  ```
+```
 
 响应参数说明 data数组元素：
 
@@ -1876,47 +1876,38 @@ orderIds 与 clientOrderIds 选填1个
 
 响应参数说明 data
 
-| 参数名           | 必选 | 类型       | 说明                                                         |
-| :--------------- | :--- | :--------- | :----------------------------------------------------------- |
-| id               | 是   | String     | 订单id                                                       |
-| orderCode        | 是   | String     | 自定义订单ID                                                 |
-| marketId         | 是   | Long       | 市场id                                                       |
-| price            | 是   | Decimal    | 委托价格                                                     |
-| amount           | 是   | Decimal    | 委托数量                                                     |
-| value            | 否   | Decimal    | 委托价值，即委托价格 * 委托数量                              |
-| availableAmount  | 否   | Decimal    | 可用委托数量                                                 |
-| availableValue   | 是   | Decimal    | 可用委托价值                                                 |
-| tradeAmount      | 是   | Decimal    | 成交完成量, 每次成交都会增加                                 |
-| tradeValue       | 是   | Decimal    | 成交完成价值, 每次成交都会增加                               |
-| type             | 是   | Integer    | 委托类型: -1 卖, 1 买                                        |
-| action           | 是   | Integer    | 订单价格类型:  <br/>1   限价<br/>11 对手价<br/>12 最优5档<br/>13 最优10档<br/>14 最优20档<br/>19 最优极限档，即在限价上限或下限的最优价格<br/>3   IOC<br/>31 对手价IOC<br/>32 最优5档IOC<br/>33 最优10档IOC<br/>34 最优20档IOC<br/>39 最优极限档IOC，即在限价上限或下限的最优价格IOC<br/>4   只做 maker<br/>5   FOK<br/>51 对手价FOK<br/>52 最优5档FOK<br/>53 最优10档FOK<br/>54 最优20档FOK<br/>59 最优极限档FOK，即在限价上限或下限的最优价格FOK |
-| showStatus       | 是   | Integer    | 状态: 1:未成交、2:部分成交（订单还在挂单中）、3:已完成、4：取消中、5:完全取消、6：取消失败、7：部分取消（订单已完成，部分成交） |
-| entrustType      | 是   | Integer    | 委托类型： <br/>1限价委托 <br/>2强制减仓 <br/>3强制平仓 <br/>4计划委托 <br/>5止盈 <br/>6止损 <br/>7强平（未穿仓） <br/>8强平（风险基金）<br/>9强平（自动减仓） |
-| side             | 是   | Integer    | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>7 只减仓平多<br/>8 只减仓平空 |
-| sourceType       | 是   | Integer    | 来源：<br/>1:WEB<br/>2:Android<br/>3:iOS<br/>4:Rest API<br/>5:WebSocket API<br/>6:System<br/>7:Plan Entrust(计划委托)<br/>8:Take Profit(止盈)<br/>9:Stop Loss(止损) |
-| leverage         | 是   | Integer    | 杠杠倍数                                                     |
-| avgPrice         | 是   | BigDecimal | 成交均价                                                     |
-| canCancel        | 是   | Boolean    | 能否取消                                                     |
-| createTime       | 是   | Long       | 下单时间，时间戳                                             |
-| margin           | 是   | Decimal    | 保证金                                                       |
-| **orderAlgos[]** |      |            |                                                              |
-| bizType          | 是   | Integer    | 类型，1：止盈，2：止损                                       |
-| priceType        | 是   | Integer    | 价格类型，1：标记价格，2：最新价格                           |
-| triggerPrice     | 是   | Decimal    | 触发价格                                                     |
-| status           | 是   | Integer    | 状态，0：未生效，1：已生效                                 |
+| 参数名          | 必选 | 类型       | 说明                                                         |
+| :-------------- | :--- | :--------- | :----------------------------------------------------------- |
+| id              | 是   | String     | 订单id                                                       |
+| orderCode       | 是   | String     | 自定义订单ID                                                 |
+| marketId        | 是   | Long       | 市场id                                                       |
+| price           | 是   | Decimal    | 委托价格                                                     |
+| amount          | 是   | Decimal    | 委托数量                                                     |
+| value           | 否   | Decimal    | 委托价值，即委托价格 * 委托数量                              |
+| availableAmount | 否   | Decimal    | 可用委托数量                                                 |
+| availableValue  | 是   | Decimal    | 可用委托价值                                                 |
+| tradeAmount     | 是   | Decimal    | 成交完成量, 每次成交都会增加                                 |
+| tradeValue      | 是   | Decimal    | 成交完成价值, 每次成交都会增加                               |
+| type            | 是   | Integer    | 委托类型: -1 卖, 1 买                                        |
+| action          | 是   | Integer    | 订单价格类型:  <br/>1   限价<br/>11 对手价<br/>12 最优5档<br/>13 最优10档<br/>14 最优20档<br/>19 最优极限档，即在限价上限或下限的最优价格<br/>2  市价（按数量委托）<br/>3   IOC<br/>31 对手价IOC<br/>32 最优5档IOC<br/>33 最优10档IOC<br/>34 最优20档IOC<br/>39 最优极限档IOC，即在限价上限或下限的最优价格IOC<br/>4   只做 maker<br/>5   FOK<br/>51 对手价FOK<br/>52 最优5档FOK<br/>53 最优10档FOK<br/>54 最优20档FOK<br/>59 最优极限档FOK，即在限价上限或下限的最优价格FOK |
+| showStatus      | 是   | Integer    | 状态: 1:未成交、2:部分成交（订单还在挂单中）、3:已完成、4：取消中、5:完全取消、6：取消失败、7：部分取消（订单已完成，部分成交） |
+| entrustType     | 是   | Integer    | 委托类型： <br/>1限价委托 <br/>2强制减仓 <br/>3强制平仓 <br/>4计划委托 <br/>5止盈 <br/>6止损 <br/>7强平（未穿仓） <br/>8强平（风险基金）<br/>9强平（自动减仓）<br/>10资金费平仓<br/>11止盈止损<br/>12市价委托 |
+| side            | 是   | Integer    | 方向：1开多（买入），2开空（卖出），3平多（卖出），4平空（买入） |
+| sourceType      | 是   | Integer    | 来源：<br/>1:WEB<br/>2:Android<br/>3:iOS<br/>4:Rest API<br/>5:WebSocket API<br/>6:System<br/>7:Plan Entrust(计划委托)<br/>8:Take Profit(止盈)<br/>9:Stop Loss(止损) |
+| leverage        | 是   | Integer    | 杠杠倍数                                                     |
+| avgPrice        | 是   | BigDecimal | 成交均价                                                     |
+| canCancel       | 是   | Boolean    | 能否取消                                                     |
+| createTime      | 是   | Long       | 下单时间，时间戳                                             |
+| margin          | 是   | Decimal    | 保证金          |
 | lastTradePrice   | 否   | Integer    | 最后成交价                                             |
 | lastTradeAmount  | 否   | Integer    | 最后成交量                                             |
 | lastTradeId      | 否   | Integer    | 最后成交 ID                                           |
-| lastTradeTime    | 否   | Integer    | 最后成交时间                                   |
-
+| lastTradeTime    | 否   | Integer    | 最后成交时间
 
 
 ### 5.7 查询所有订单(包括历史订单)
 
 - URL:  /Server/api/v2/trade/getAllOrders
-- 请注意，如果订单满足如下条件，不会被查询到：
-    - 订单的最终状态为 `已取消` , **并且**
-    - 订单没有任何的成交记录
 - 接口类型: Http
 - 请求类型: GET
 -
@@ -2022,7 +2013,11 @@ orderId 与 clientOrderId 选填1个
         "tradeValue": "0",
         "type": 1,
         "userId": 1,
-        "value": "613"
+        "value": "613",
+        "lastTradePrice": "40118.02",
+        "lastTradeAmount": "0.31",
+        "lastTradeId": "67559926698340432891",
+        "lastTradeTime": 1617955686930
     },
     "desc": "success"
 }
@@ -2105,7 +2100,7 @@ orderId 与 clientOrderId 选填1个
   请求参数说明 body：
 
   | 参数名    | 必选 | 类型    | 说明                                                         |
-  | :-------- | :--- | :------ | :----------------------------------------------------------- |
+    | :-------- | :--- | :------ | :----------------------------------------------------------- |
   | symbol    | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT                   |
   | side      | 否   | Integer | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>0 仅平仓 |
   | dateRange | 否   | Integer | 查询类型<br/>0 最近委托，默认值<br/>1 更多委托               |
@@ -2162,14 +2157,15 @@ orderId 与 clientOrderId 选填1个
 - 请求参数（通用）
 
   | 参数名    | 必选 | 类型    | 说明                                                         |
-  | :-------- | :--- | :------ | :----------------------------------------------------------- |
+    | :-------- | :--- | :------ | :----------------------------------------------------------- |
   | symbol    | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT                   |
   | side      | 是   | Integer | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>0 仅平仓 |
   | orderType | 是   | Integer | `1`：计划委托<br/>`2`：止盈止损                              |
   | amount    | 是   | Decimal | 数量                                                         |
 
+​			 
 
-​			 **计划委托参数**
+​		**计划委托参数**
 
 | 参数名       | 必选 | 类型    | 说明                                                         |
 | :----------- | :--- | :------ | :----------------------------------------------------------- |
@@ -2227,7 +2223,7 @@ orderId 与 clientOrderId 选填1个
 - 请求参数:
 
   | 参数名 | 必选 | 类型         | 说明                                                         |
-  | :----- | :--- | :----------- | :----------------------------------------------------------- |
+    | :----- | :--- | :----------- | :----------------------------------------------------------- |
   | symbol | 是   | String       | 合约，即市场交易对唯一标识符，如：BTC_USDT                   |
   | ids    | 否   | List<String> | 撤销指定的委托单ID                                           |
   | side   | 否   | Integer      | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>0 仅平仓 |
@@ -2281,17 +2277,17 @@ orderId 与 clientOrderId 选填1个
 
 - 请求参数说明 body：
 
-| 参数名    | 必选 | 类型    | 说明                                                         |
-| :-------- | :--- | :------ | :----------------------------------------------------------- |
-| symbol    | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT                   |
-| side      | 否   | Integer | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>0 仅平仓 |
-| orderType | 是   | Integer | `1`：计划委托<br/>`2`：止盈止损                              |
-| bizType   | 否   | Integer | 针对止盈止损<br/>`1`:止盈<br/>`2`:止损                       |
-| status    | 否   | Integer | **针对计划委托**<br/>`1`:等待委托<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:委托失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败<br/>**针对止盈止损**<br/>`1`:未触发<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:触发失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败 |
-| startTime | 否   | Long    | 开始时间                                                     |
-| endTime   | 否   | Long    | 结束时间                                                     |
-| pageNum   | 是   | Integer | 页码，从1开始                                                |
-| pageSize  | 是   | Integer | 分页大小，默认10                                             |
+| 参数名      | 必选 | 类型    | 说明                                                         |
+| :---------- | :--- | :------ | :----------------------------------------------------------- |
+| symbol      | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT                   |
+| side        | 否   | Integer | 方向：<br/>**双向持仓**<br/>1 开多（买入）<br/>2 开空（卖出）<br/>3 平多（卖出）<br/>4 平空（买入）<br/>**单向持仓**<br/>5 买入<br/>6 卖出<br/>0 仅平仓 |
+| orderType   | 是   | Integer | `1`：计划委托<br/>`2`：止盈止损                              |
+| ~~bizType~~ | 否   | Integer | 针对止盈止损<br/>`1`:止盈<br/>`2`:止损<br/>弃用              |
+| status      | 否   | Integer | **针对计划委托**<br/>`1`:等待委托<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:委托失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败<br/>**针对止盈止损**<br/>`1`:未触发<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:触发失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败 |
+| startTime   | 否   | Long    | 开始时间                                                     |
+| endTime     | 否   | Long    | 结束时间                                                     |
+| pageNum     | 是   | Integer | 页码，从1开始                                                |
+| pageSize    | 是   | Integer | 分页大小，默认10                                             |
 
 - 响应结果:
 
@@ -2362,6 +2358,7 @@ orderId 与 clientOrderId 选填1个
 | status       | 是   | Integer | **针对计划委托**<br/>`1`:等待委托<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:委托失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败<br/>**针对止盈止损**<br/>`1`:未触发<br/>`2`:已取消<br/>`3`:挂单中<br/>`4`:触发失败<br/>`5`已完成<br/>`6`:部分成交<br/>`7`:订单已取消<br/>`8`失败 |
 
 
+
 ## 6. 交易活动
 
 跟交易活动相关的接口请在header中添加如下参数
@@ -2384,7 +2381,7 @@ subAccount: {periodId: 期id(activityPeriodId)}
 - 请求参数:
 
   | 参数名 | 必选 | 类型    | 说明                                         |
-  | :----- | :--- | :------ | :------------------------------------------- |
+    | :----- | :--- | :------ | :------------------------------------------- |
   | activityPeriodId | 是   | Integer  | | 参与的期 id
 
 - 响应结果:
@@ -2402,18 +2399,19 @@ subAccount: {periodId: 期id(activityPeriodId)}
 
 ## 7. 公共行情：Http
 
-USDT合约地址：https://fapi.bw6.com
+USDT合约地址：https://fapi.bw.com
 
 ### 7.1 交易对
 - URL: /Server/api/v2/config/marketList
+
 - 接口类型: Http
+
 - 请求类型: GET
+
 - 请求参数:
 
-  | 名称         | 类型     | 是否必须 | 描述      |
-  | :---------- | :----- | :--- | :------ |
-  | futuresAccountType | Integer | 否    | 合约类型，1:USDT合约（默认） |
-
+  无
+  
 - 响应结果:
 
 ```
@@ -2481,7 +2479,7 @@ USDT合约地址：https://fapi.bw6.com
 | maxLeverage | Integer |     | 最大杠杆倍数 |
 | riskWarnRatio | BigDecimal |     | 风险提醒比例 |
 | defaultFeeRate | BigDecimal |     | 默认费率 |
-| contractType | Integer |     | 合约类型，1:usdt合约（默认） 2 qc合约 |
+| contractType | Integer |     | 合约类型，1:usdt合约（默认） |
 | duration | Integer |     | 合约时长，<br/>1:永续合约（默认），<br/>2:交割合约-当周，<br/>3:交割合约-次周，<br/>4:交割合约-当季，<br/>5:交割合约-次季 |
 | status | Integer |     | 状态: 1:运行, 0:停止（默认） |
 | createTime | Long |     | 创建时间 |
@@ -2507,7 +2505,7 @@ USDT合约地址：https://fapi.bw6.com
 - 请求参数:
 
   | 名称   | 类型    | 是否必须 | 描述                 |
-  | :----- | :------ | :------- | :------------------- |
+    | :----- | :------ | :------- | :------------------- |
   | symbol | String  | 是       | 交易对，如：BTC_USDT |
   | size   | Integer | 否       | 条数                 |
   | scale  | Integer | 否       | 精度                 |
@@ -2604,7 +2602,7 @@ size最大值为1440，默认值为1
 - 请求参数:
 
   | 名称   | 类型    | 是否必须 | 描述                 |
-  | :----- | :------ | :------- | :------------------- |
+    | :----- | :------ | :------- | :------------------- |
   | symbol | String  | 是       | 交易对，如：BTC_USDT |
   | size   | Integer | 否       | 条数                 |
 
@@ -3197,7 +3195,7 @@ size最大值为1440，默认值为1
 
 - 接口类型: WebSocket
 
-- USDT合约URL: wss://fapi.bw6.com/ws/public/v1
+- USDT合约URL: wss://fapi.bw.com/ws/public/v1
 - 请求参数使用json编码
 
 ### 8.1 订阅
@@ -3639,7 +3637,7 @@ size最大值为100，默认值为1
 - **请求参数：**
 
   | 参数名 | 必选 | 类型   | 说明 |
-  | :----- | :--- | :----- | :--- |
+    | :----- | :--- | :----- | :--- |
   | action | 是   | String | ping |
 
 
@@ -3667,12 +3665,11 @@ size最大值为100，默认值为1
 
 - 接口类型: WebSocket
 
-- USDT合约URL: wss://fapi.bw6.com/ws/private/api/v2
-
+- USDT合约URL: wss://fapi.bw.com/ws/private/api/v2
 - **每个请求都必须有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                             |
-  | :------ | :--- | :----- | :----------------------------------------------- |
+    | :------ | :--- | :----- | :----------------------------------------------- |
   | action  | 是   | String | subscribe:订阅  unSubscribe:取消订阅  login:登录 |
   | channel | 是   | String | 频道，代表不同的订阅内容                         |
 
@@ -3723,7 +3720,7 @@ size最大值为100，默认值为1
 - **请求参数：**
 
   | 参数名 | 必选 | 类型   | 说明 |
-  | :----- | :--- | :----- | :--- |
+    | :----- | :--- | :----- | :--- |
   | action | 是   | String | ping |
 
 
@@ -3746,16 +3743,16 @@ size最大值为100，默认值为1
 
 ### 9.2 登录
 
-建立连接后，需要先登录，才能进行频道订阅。以后的频道订阅时，就不需要带上ZB-APIKEY，ZB-TIMESTAMP和ZB-SIGN。
+建立连接后，需要先登录，才能进行频道订阅。以后的频道订阅时，就不需要带上BW-APIKEY，BW-TIMESTAMP和BW-SIGN。
 
 - **请求参数：**
 
   | 参数名       | 必选 | 类型   | 说明                                             |
   | :----------- | :--- | :----- | :----------------------------------------------- |
   | action       | 是   | String | login:登录                                       |
-  | ZB-APIKEY    | 是   | String | 由zb平台生成用户的api key                        |
-  | ZB-TIMESTAMP | 是   | String | 请求时间，为ISO格式，如`2021-01-05T14:05:28.616Z |
-  | ZB-SIGN      | 是   | String | 签名                                             |
+  | BW-APIKEY    | 是   | String | 由bw平台生成用户的api key                        |
+  | BW-TIMESTAMP | 是   | String | 请求时间，为ISO格式，如`2021-01-05T14:05:28.616Z |
+  | BW-SIGN      | 是   | String | 签名                                             |
 
 
 - 请求示例
@@ -3763,9 +3760,9 @@ size最大值为100，默认值为1
 ```json
 {
   "action": "login",
-  "ZB-APIKEY":"a55caded-eef9-426b-af7c-faf53c78e2ae",
-  "ZB-TIMESTAMP":"2021-01-22T02:08:54.312Z",
-  "ZB-SIGN":"flsToYwO39sGJ8Pp6gAfIOsUBLLRa3F3daDcYqddGKc="
+  "BW-APIKEY":"a55caded-eef9-426b-af7c-faf53c78e2ae",
+  "BW-TIMESTAMP":"2021-01-22T02:08:54.312Z",
+  "BW-SIGN":"flsToYwO39sGJ8Pp6gAfIOsUBLLRa3F3daDcYqddGKc="
 }
 ```
 
@@ -3784,11 +3781,11 @@ size最大值为100，默认值为1
 
 - 请勿将secretKey在请求或响应中传输；
 
-- ZB-SIGN字段是对``timestamp`` + ``"GET"``  + ``login``(+表示字符串连接)，以及SecretKey，使用HMAC SHA256方法加密，通过Base64编码输出而得到的；
+- BW-SIGN字段是对``timestamp`` + ``"GET"``  + ``login``(+表示字符串连接)，以及SecretKey，使用HMAC SHA256方法加密，通过Base64编码输出而得到的；
 
   如：`sign=CryptoJS.enc.Base64.Stringify(CryptoJS.HmacSHA256(timestamp + 'GET' + 'login', SecretKey))`
 
-  其中，`timestamp`的值与`ZB-TIMESTAMP`请求头相同，为ISO格式，如`2021-01-05T14:05:28.616Z`。
+  其中，`timestamp`的值与`BW-TIMESTAMP`请求头相同，为ISO格式，如`2021-01-05T14:05:28.616Z`。
 
   SecretKey为用户申请APIKey时所生成，需用sha1加密。如：`ceb892e0-0367-4cc1-88d1-ef9289feb053`，加密SecretKey得到：c9a206b430d6c6a43322a05806acb5f9514ac488
 
@@ -3809,7 +3806,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名   | 必选 | 类型   | 说明        |
-  | :------- | :--- | :----- | :---------- |
+    | :------- | :--- | :----- | :---------- |
   | channel  | 是   | String | Fund.change |
   | currency | 是   | String | 币种，如BTC |
 
@@ -3862,7 +3859,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名   | 必选 | 类型   | 说明         |
-  | :------- | :--- | :----- | :----------- |
+    | :------- | :--- | :----- | :----------- |
   | channel  | 是   | String | Fund.balance |
   | currency | 否   | String | 币种，如BTC  |
 
@@ -3916,7 +3913,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名    | 必选 | 类型    | 说明             |
-  | :-------- | :--- | :------ | ---------------- |
+    | :-------- | :--- | :------ | ---------------- |
   | channel   | 是   | String  | Fund.getBill     |
   | currency  | 否   | String  | 币种，如BTC      |
   | type      | 否   | Integer | 账单类型         |
@@ -4023,7 +4020,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名      | 必选 | 类型   | 说明                                                         |
-  | :---------- | :--- | :----- | :----------------------------------------------------------- |
+    | :---------- | :--- | :----- | :----------------------------------------------------------- |
   | channel     | 是   | String | Fund.assetChange                                             |
   | convertUnit | 否   | String | 折合单位，页面显示上"≈"号后面的数字单位，可选：cny，usd,btc,默认cny |
 
@@ -4074,7 +4071,7 @@ size最大值为100，默认值为1
 | freeze                  | BigDecimal | 冻结量                                                       |
 | allUnrealizedPnl        | BigDecimal | 所有对应仓位的累积未实现盈亏                                 |
 | accountBalance          | BigDecimal | 账户余额：可用+冻结+所以仓位未实现盈亏                       |
-| unit                    | String     | 固定返回，如果是u本位，返回usdt，如果是币本位返回btc，如果是qc合约返回qc，统计数据的单位 |
+| unit                    | String     | 固定返回，如果是u本位，返回usdt，如果是币本位返回btc，统计数据的单位 |
 | allMarginConvert        | BigDecimal | 所有仓位保证金折合                                           |
 | availableConvert        | BigDecimal | 可用资产量折合                                               |
 | freezeConvert           | BigDecimal | 冻结量折合                                                   |
@@ -4091,7 +4088,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名      | 必选 | 类型   | 说明                                                         |
-  | :---------- | :--- | :----- | :----------------------------------------------------------- |
+    | :---------- | :--- | :----- | :----------------------------------------------------------- |
   | channel     | 是   | String | Fund.assetInfo                                               |
   | convertUnit | 否   | String | 折合单位，页面显示上"≈"号后面的数字单位，可选：cny，usd,btc,默认cny。不能同时订阅多种折合单位。后面订阅会自动取消前面的订阅。 |
 
@@ -4143,7 +4140,7 @@ size最大值为100，默认值为1
 - **仓位请求都必须有的参数：**
 
   | 参数名             | 必选 | 类型    | 说明           |
-  | :----------------- | :--- | :------ | :------------- |
+    | :----------------- | :--- | :------ | :------------- |
   | futuresAccountType | 是   | Integer | 1:USDT永续合约 |
 
 
@@ -4154,7 +4151,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                       |
-  | :------ | :--- | :----- | :----------------------------------------- |
+    | :------ | :--- | :----- | :----------------------------------------- |
   | channel | 是   | String | Positions.change                           |
   | symbol  | 否   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
 
@@ -4241,7 +4238,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                       |
-  | :------ | :--- | :----- | :----------------------------------------- |
+    | :------ | :--- | :----- | :----------------------------------------- |
   | channel | 是   | String | Positions.getPositions                     |
   | symbol  | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
 
@@ -4334,7 +4331,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名      | 必选 | 类型   | 说明                 |
-  | :---------- | :--- | :----- | :------------------- |
+    | :---------- | :--- | :----- | :------------------- |
   | channel     | 是   | String | Positions.marginInfo |
   | positionsId | 是   | Long   | 仓位id               |
 
@@ -4373,7 +4370,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名      | 必选 | 类型       | 说明                   |
-  | :---------- | :--- | :--------- | :--------------------- |
+    | :---------- | :--- | :--------- | :--------------------- |
   | channel     | 是   | String     | Positions.updateMargin |
   | positionsId | 是   | Long       | 仓位id                 |
   | amount      | 是   | BigDecimal | 变动数量               |
@@ -4442,7 +4439,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                       |
-  | :------ | :--- | :----- | :----------------------------------------- |
+    | :------ | :--- | :----- | :----------------------------------------- |
   | channel | 是   | String | Positions.getSetting                       |
   | symbol  | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
 
@@ -4486,7 +4483,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名   | 必选 | 类型    | 说明                                       |
-  | :------- | :--- | :------ | :----------------------------------------- |
+    | :------- | :--- | :------ | :----------------------------------------- |
   | channel  | 是   | String  | Positions.setLeverage                      |
   | symbol   | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | leverage | 是   | Integer | 杠杆倍数                                   |
@@ -4534,7 +4531,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名        | 必选 | 类型    | 说明                                       |
-  | :------------ | :--- | :------ | :----------------------------------------- |
+    | :------------ | :--- | :------ | :----------------------------------------- |
   | channel       | 是   | String  | Positions.setPositionsMode                 |
   | symbol        | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | positionsMode | 是   | Integer | 1:单向持仓，2: 双向持仓                    |
@@ -4578,7 +4575,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名     | 必选 | 类型    | 说明                                       |
-  | :--------- | :--- | :------ | :----------------------------------------- |
+    | :--------- | :--- | :------ | :----------------------------------------- |
   | channel    | 是   | String  | Positions.setMarginMode                    |
   | symbol     | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | marginMode | 是   | Integer | 1逐仓（默认），2全仓                       |
@@ -4622,7 +4619,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型    | 说明                                       |
-  | :------ | :--- | :------ | :----------------------------------------- |
+    | :------ | :--- | :------ | :----------------------------------------- |
   | channel | 是   | String  | Positions.getNominalValue                  |
   | symbol  | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | side    | 是   | Integer | 方向：1：开多   0 开空                     |
@@ -4671,7 +4668,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                       |
-  | :------ | :--- | :----- | :----------------------------------------- |
+    | :------ | :--- | :----- | :----------------------------------------- |
   | channel | 是   | String | trade.orderChange                          |
   | symbol  | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
 
@@ -4718,7 +4715,7 @@ size最大值为100，默认值为1
     "userId":"6755772669834045440",
     "value":"2022.1",
     "lastTradePrice": "40118.02",
-    "lastTradeAmount: "0.31" ,
+    "lastTradeAmount": "0.31" ,
     "lastTradeId": "67559926698340432891",
     "lastTradeTime": 1617955686930
   }
@@ -4790,7 +4787,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名        | 必选 | 类型   | 说明                                       |
-  | ------------- | ---- | :----- | :----------------------------------------- |
+    | ------------- | ---- | :----- | :----------------------------------------- |
   | channel       | 是   | String | trade.getOrder                             |
   | symbol        | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | orderId       | 否   | Long   | 订单ID                                     |
@@ -4858,7 +4855,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名        | 必选 | 类型   | 说明                                       |
-  | ------------- | ---- | :----- | :----------------------------------------- |
+    | ------------- | ---- | :----- | :----------------------------------------- |
   | channel       | 是   | String | trade.cancelOrder                          |
   | symbol        | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | orderId       | 否   | Long   | 订单ID                                     |
@@ -4979,7 +4976,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名   | 必选 | 类型    | 说明                                       |
-  | -------- | ---- | :------ | :----------------------------------------- |
+    | -------- | ---- | :------ | :----------------------------------------- |
   | channel  | 是   | String  | trade.getUndoneOrders                      |
   | symbol   | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | pageNum  | 是   | Integer | 页码，从1开始                              |
@@ -5076,7 +5073,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名    | 必选 | 类型    | 说明                                       |
-  | --------- | ---- | :------ | :----------------------------------------- |
+    | --------- | ---- | :------ | :----------------------------------------- |
   | channel   | 是   | String  | trade.getAllOrders                         |
   | symbol    | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | startTime | 否   | Long    | 开始时间                                   |
@@ -5176,7 +5173,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名  | 必选 | 类型   | 说明                                       |
-  | ------- | ---- | :----- | :----------------------------------------- |
+    | ------- | ---- | :----- | :----------------------------------------- |
   | channel | 是   | String | trade.getTradeList                         |
   | symbol  | 是   | String | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | orderId | 是   | Long   | 订单ID                                     |
@@ -5251,7 +5248,7 @@ size最大值为100，默认值为1
 - **特有的参数：**
 
   | 参数名    | 必选 | 类型    | 说明                                       |
-  | --------- | ---- | :------ | :----------------------------------------- |
+    | --------- | ---- | :------ | :----------------------------------------- |
   | channel   | 是   | String  | trade.tradeHistory                         |
   | symbol    | 是   | String  | 合约，即市场交易对唯一标识符，如：BTC_USDT |
   | startTime | 否   | Long    | 开始时间                                   |
@@ -5261,7 +5258,9 @@ size最大值为100，默认值为1
 
 -
 
-    - 请求示例
+```
+- 请求示例
+```
 
 ```json
 {
@@ -5340,7 +5339,7 @@ size最大值为100，默认值为1
 
 - 响应结果:
 
-```
+```JSON 
 {
   "channel":"Trade.batchOrder",
   "data": [
@@ -5373,162 +5372,162 @@ size最大值为100，默认值为1
 
 ## 10.错误码
 
-| 代码   | 描述                                             |
-| :----- | :----------------------------------------------- |
-| 10000  | 操作成功                                         |
-| 10001  | 操作失败                                         |
-| 10002  | 操作被禁止                                       |
-| 10003  | 数据已存在                                       |
-| 10004  | 数据不存在                                       |
-| 10005  | 禁止访问接口                                     |
-| 10006  | token无效或已过期                                |
-| 10007  | {0}                                              |
-| 10008  | 操作失败: {0}                                    |
-| 10009  | URL错误                                          |
-| 10010  | API KEY不存在                                    |
-| 10011  | API KEY已关闭                                    |
-| 10012  | 用户API已被冻结，请联系客服处理                  |
-| 10013  | api校验失败                                      |
-| 10014  | 无效的签名(1001)                                 |
-| 10015  | 无效的签名(1002)                                 |
-| 10016  | 无效的ip                                         |
-| 10017  | 没有权限                                         |
-| 10018  | 用户已被冻结，请联系客服处理                     |
-| 10019  | 请求时间已失效                                   |
-| 10020  | {0}参数不能为空                                  |
-| 10021  | {0}参数值无效                                    |
-| 10022  | 请求method错误                                   |
-| 10023  | 请求频率过快，超过该接口允许的限额               |
-| 10024  | 登录失败                                         |
-| 10025  | 非本人操作                                       |
-| 10026  | 请求接口失败，请您重试                           |
-| 10027  | 请求超时，请稍后再试                             |
-| 10028  | 系统繁忙，请稍后再试                             |
-| 10029  | 操作频繁，请稍后再试                             |
-| 10030  | 币种已存在                                       |
-| 10031  | 币种不存在                                       |
-| 10032  | 市场已存在                                       |
-| 10033  | 市场不存在                                       |
-| 10034  | 币种错误                                         |
-| 10035  | 市场未开放                                       |
-| 10036  | 无效的市场类型                                   |
-| 10037  | 用户id不能为空                                   |
-| 10038  | 市场id不能为空                                   |
-| 10039  | 标记价格获取失败                                 |
-| 10040  | 开仓保证金配置获取失败                           |
-| 10041  | 维持保证金配置获取失败                           |
-| 10042  | 开仓均价获取异常                                  |
-| 10043  | 强平价格获取异常                                 |
-| 10044  | 未实现盈亏获取异常                               |
-| 10045  | jdbc数据源获取失败                               |
-| 10046  | 无效的仓位方向                                   |
-| 10047  | 已超过当前杠杆倍数允许的最大头寸                 |
-| 10048  | 已超过最大允许的下单数量                         |
-| 10049  | 最新成交价格获取失败                             |
-| 10100  | 抱歉！系统维护中，停止操作                       |
-| 11000  | 资金变更失败                                     |
-| 11001  | 仓位变更失败                                     |
-| 11002  | 资金不存在                                       |
-| 11003  | 冻结记录不存在                                   |
-| 11004  | 冻结资金不足                                     |
-| 11005  | 仓位不足                                         |
-| 11006  | 冻结仓位不足                                     |
-| 11007  | 仓位不存在                                       |
-| 11008  | 该合约有持仓,禁止修改                            |
-| 11009  | 查询数据失败                                     |
-| 110110 | 超过市场最大杠杆倍数                             |
-| 110011 | 超过仓位允许最大杠杆倍数                         |
-| 11012  | 保证金不足                                       |
-| 11013  | 超出精度限制                                     |
-| 11014  | 账单类型无效                                     |
-| 11015  | 添加默认账户失败                                 |
-| 11016  | 账户不存在                                       |
-| 11017  | 资金未冻结或已解冻                               |
-| 11018  | 资金不足                                         |
-| 11019  | 账单不存在                                       |
-| 11021  | 资金划转币种不一致                               |
-| 11023  | 交易币种相同                                     |
-| 11030  | 仓位被锁定，禁止操作                             |
-| 11031  | 账单变化数量为零                                 |
-| 11032  | 有相同请求处理中，请勿重复提交。                 |
-| 11033  | 仓位配置数据为空                                 |
-| 11034  | 资金费正在结算，请勿操作                         |
-| 11035  | 只减仓下单和同向挂单不兼容                       |
+| 代码   | 描述                                               |
+| :----- | :------------------------------------------------- |
+| 10000  | 操作成功                                           |
+| 10001  | 操作失败                                           |
+| 10002  | 操作被禁止                                         |
+| 10003  | 数据已存在                                         |
+| 10004  | 数据不存在                                         |
+| 10005  | 禁止访问接口                                       |
+| 10006  | token无效或已过期                                  |
+| 10007  | {0}                                                |
+| 10008  | 操作失败：{0}                                      |
+| 10009  | URL错误                                            |
+| 10010  | API KEY不存在                                      |
+| 10011  | API KEY已关闭                                      |
+| 10012  | 用户API已被冻结，请联系客服处理                    |
+| 10013  | api校验失败                                        |
+| 10014  | 无效的签名(1001)                                   |
+| 10015  | 无效的签名(1002)                                   |
+| 10016  | 无效的ip                                           |
+| 10017  | 没有权限                                           |
+| 10018  | 用户已被冻结，请联系客服处理                       |
+| 10019  | 请求时间已失效                                     |
+| 10020  | {0}参数不能为空                                    |
+| 10021  | {0}参数值无效                                      |
+| 10022  | 请求method错误                                     |
+| 10023  | 请求频率过快，超过该接口允许的限额                 |
+| 10024  | 登录失败                                           |
+| 10025  | 非本人操作                                         |
+| 10026  | 请求接口失败，请您重试                             |
+| 10027  | 请求超时，请稍后再试                               |
+| 10028  | 系统繁忙，请稍后再试                               |
+| 10029  | 操作频繁，请稍后再试                               |
+| 10030  | 币种已存在                                         |
+| 10031  | 币种不存在                                         |
+| 10032  | 市场已存在                                         |
+| 10033  | 市场不存在                                         |
+| 10034  | 币种错误                                           |
+| 10035  | 市场未开放                                         |
+| 10036  | 无效的市场类型                                     |
+| 10037  | 用户id不能为空                                     |
+| 10038  | 市场id不能为空                                     |
+| 10039  | 标记价格获取失败                                   |
+| 10040  | 开仓保证金配置获取失败                             |
+| 10041  | 维持保证金配置获取失败                             |
+| 10042  | 开仓均价获取异常                                   |
+| 10043  | 强平价格获取异常                                   |
+| 10044  | 未实现盈亏获取异常                                 |
+| 10045  | jdbc数据源获取失败                                 |
+| 10046  | 无效的仓位方向                                     |
+| 10047  | 已超过当前杠杆倍数允许的最大头寸                   |
+| 10048  | 已超过最大允许的下单数量                           |
+| 10049  | 最新成交价格获取失败                               |
+| 10100  | 抱歉！系统维护中，停止操作                         |
+| 11000  | 资金变更失败                                       |
+| 11001  | 仓位变更失败                                       |
+| 11002  | 资金不存在                                         |
+| 11003  | 冻结记录不存在                                     |
+| 11004  | 冻结资金不足                                       |
+| 11005  | 仓位不足                                           |
+| 11006  | 冻结仓位不足                                       |
+| 11007  | 仓位不存在                                         |
+| 11008  | 该合约有持仓，禁止修改                             |
+| 11009  | 查询数据失败                                       |
+| 110110 | 超过市场最大杠杆倍数                               |
+| 110011 | 超过仓位允许最大杠杆倍数                           |
+| 11012  | 保证金不足                                         |
+| 11013  | 超出精度限制                                       |
+| 11014  | 账单类型无效                                       |
+| 11015  | 添加默认账户失败                                   |
+| 11016  | 账户不存在                                         |
+| 11017  | 资金未冻结或已解冻                                 |
+| 11018  | 资金不足                                           |
+| 11019  | 账单不存在                                         |
+| 11021  | 资金划转币种不一致                                 |
+| 11023  | 交易币种相同                                       |
+| 11030  | 仓位被锁定，禁止操作                               |
+| 11031  | 账单变化数量为零                                   |
+| 11032  | 有相同请求处理中，请勿重复提交。                   |
+| 11033  | 仓位配置数据为空                                   |
+| 11034  | 资金费正在结算，请勿操作                           |
+| 11035  | 只减仓下单和同向挂单不兼容                         |
 | 11036  | 全仓仓位不允许操作                                 |
-| 12000  | 下单价格无效                                     |
-| 12001  | 下单数量无效                                     |
-| 12002  | 订单类型无效                                     |
-| 12003  | 价格精度无效                                     |
-| 12004  | 数量精度无效                                     |
-| 12005  | 下单数量小于最小值或大于最大值                   |
-| 12006  | 自定义的订单号格式错误                           |
-| 12007  | side错误                                         |
-| 12008  | 下单类型错误                                     |
-| 12009  | 委托类型错误                                     |
-| 12010  | 下单失败，以此价格下单成交亏损金额将超过保证金   |
-| 12011  | it's not a buz order                             |
-| 12012  | 订单不存在                                       |
-| 12013  | 订单用户不匹配                                   |
-| 12014  | 订单仍在交易中                                   |
-| 12015  | 订单预处理失败                                   |
-| 12016  | 订单不能取消                                     |
-| 12017  | 成交记录不存在                                   |
-| 12018  | 下单失败                                         |
-| 12019  | extend参数不能为空                               |
-| 12020  | extend参数错误                                   |
-| 12021  | 下单价格不在限价规则范围内！                     |
-| 12022  | 系统计算资金费中，停止下单                       |
-| 12023  | 没有需要平仓的仓位                               |
-| 12024  | 禁止下单，敬请期待！                             |
-| 12025  | 禁止撤单，敬请期待！                             |
-| 12026  | 下单失败，自定义订单号已存在                     |
-| 12027  | 委托繁忙，请稍后再试                             |
-| 12028  | 该市场已禁止交易                                 |
-| 12029  | 禁止下开仓单，敬请期待！                         |
-| 12030  | 下单名义价值小于最小值或大于最大值               |
-| 12031  | 订单已完成禁止修改                               |
+| 12000  | 下单价格无效                                       |
+| 12001  | 下单数量无效                                       |
+| 12002  | 订单类型无效                                       |
+| 12003  | 价格精度无效                                       |
+| 12004  | 数量精度无效                                       |
+| 12005  | 下单数量小于最小值或大于最大值                     |
+| 12006  | 自定义的订单号格式错误                             |
+| 12007  | side错误                                           |
+| 12008  | 下单类型错误                                       |
+| 12009  | 委托类型错误                                       |
+| 12010  | 下单失败，以此价格下单成交亏损金额将超过保证金     |
+| 12011  | it's not a buz order                               |
+| 12012  | 订单不存在                                         |
+| 12013  | 订单用户不匹配                                     |
+| 12014  | 订单仍在交易中                                     |
+| 12015  | 订单预处理失败                                     |
+| 12016  | 订单不能取消                                       |
+| 12017  | 成交记录不存在                                     |
+| 12018  | 下单失败                                           |
+| 12019  | extend参数不能为空                                 |
+| 12020  | extend参数错误                                     |
+| 12021  | 下单价格不在限价规则范围内！                       |
+| 12022  | 系统计算资金费中，停止下单                         |
+| 12023  | 没有需要平仓的仓位                                 |
+| 12024  | 禁止下单，敬请期待！                               |
+| 12025  | 禁止撤单，敬请期待！                               |
+| 12026  | 下单失败，自定义订单号已存在                       |
+| 12027  | 委托繁忙，请稍后再试                               |
+| 12028  | 该市场已禁止交易                                   |
+| 12029  | 禁止下开仓单，敬请期待！                           |
+| 12030  | 下单名义价值小于最小值或大于最大值                 |
+| 12031  | 订单已完成禁止修改                                 |
 | 12032  | 仓位模式不匹配, 请升级新版APP                      |
 | 12033  | 当前存在同向挂单                                   |
-| 12201  | 委托策略不存在或状态已变更                       |
-| 12202  | 托策略状态已变更，不能取消                       |
-| 12203  | orderType类型错误                                |
-| 12204  | 触发价格无效                                     |
-| 12205  | 触发价必须大于当前行情的卖1档价格或小于买1档价格 |
-| 12206  | side和orderType不匹配                            |
-| 12207  | 委托失败，单个仓位最多只可同时存在10条止盈止损委托     |
-| 12208  | 触发价格精度无效                                 |
-| 12209  | 多仓委托价小于等于强平价格                        |
+| 12201  | 委托策略不存在或状态已变更                         |
+| 12202  | 托策略状态已变更，不能取消                         |
+| 12203  | orderType类型错误                                  |
+| 12204  | 触发价格无效                                       |
+| 12205  | 触发价必须大于当前行情的卖1档价格或小于买1档价格   |
+| 12206  | side和orderType不匹配                              |
+| 12207  | 委托失败，单个仓位最多只可同时存在10条止盈止损委托 |
+| 12208  | 触发价格精度无效                                   |
+| 12209  | 多仓委托价小于等于强平价格                         |
 | 12230  | 空仓委托价大于等于强平价格                         |
 | 12231  | 触发价格等于当前价格，请修改后重新委托             |
-| 13001  | 用户不存在                                       |
-| 13002  | 用户未开启合约                                   |
-| 13003  | 用户被锁定                                       |
-| 13003  | 保证金档位不连续                                 |
-| 13004  | 保证金速算额小于0                                |
-| 13005  | 您已超过了当天导出的次数                         |
-| 13006  | 未收藏任何市场                                   |
-| 13007  | 市场未收藏                                       |
-| 13008  | 不在任何市场用户白名单                           |
-| 13009  | 不在此市场用户白名单中                           |
-| 14000  | {0} 不支持                                       |
-| 14001  | 已登录，不需多次登录                             |
-| 14002  | 还未登录，请先登录再订阅                         |
-| 14003  | 这是用于一次性查询的频道，不需要取消订阅         |
-| 14100  | 精度不支持                                       |
-| 14101  | 请求超出限频次数                                 |
-| 14200  | id为空                                           |
-| 14300  | 活动期数不存在                                   |
-| 14301  | 活动已开启，不能入场                             |
-| 14302  | 已超过购买时间，不能入场                         |
-| 14303  | 还未开放购买                                     |
-| 14305  | 不能入场，已超过最大返场次数了                   |
-| 14306  | 不能重复入场                                     |
-| 14307  | 无法取消，状态已变更                             |
-| 14308  | 无法取消，金额不一致                             |
-| 14309  | 活动未开始                                       |
-| 14310  | 活动已结束                                       |
-| 14311  | 此活动不支持本市场下单                           |
-| 14312  | 您还未参加本次活动                               |
-| 14313  | 抱歉！购买失败，已达到最大可参与人数了           |
-| 14314  | 活动期id错误                                     |
-| 9999   | 未知错误                                         |
+| 13001  | 用户不存在                                         |
+| 13002  | 用户未开启合约                                     |
+| 13003  | 用户被锁定                                         |
+| 13003  | 保证金档位不连续                                   |
+| 13004  | 保证金速算额小于0                                  |
+| 13005  | 您已超过了当天导出的次数                           |
+| 13006  | 未收藏任何市场                                     |
+| 13007  | 市场未收藏                                         |
+| 13008  | 不在任何市场用户白名单                             |
+| 13009  | 不在此市场用户白名单中                             |
+| 14000  | {0} 不支持                                         |
+| 14001  | 已登录，不需多次登录                               |
+| 14002  | 还未登录，请先登录再订阅                           |
+| 14003  | 这是用于一次性查询的频道，不需要取消订阅           |
+| 14100  | 精度不支持                                         |
+| 14101  | 请求超出限频次数                                   |
+| 14200  | id为空                                             |
+| 14300  | 活动期数不存在                                     |
+| 14301  | 活动已开启，不能入场                               |
+| 14302  | 已超过购买时间，不能入场                           |
+| 14303  | 还未开放购买                                       |
+| 14305  | 不能入场，已超过最大返场次数了                     |
+| 14306  | 不能重复入场                                       |
+| 14307  | 无法取消，状态已变更                               |
+| 14308  | 无法取消，金额不一致                               |
+| 14309  | 活动未开始                                         |
+| 14310  | 活动已结束                                         |
+| 14311  | 此活动不支持本市场下单                             |
+| 14312  | 您还未参加本次活动                                 |
+| 14313  | 抱歉！购买失败，已达到最大可参与人数了             |
+| 14314  | 活动期id错误                                       |
+| 9999   | 未知错误                                           |
